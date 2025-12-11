@@ -192,7 +192,11 @@ $breakpoint-sm: 575px;
         // Depth 4
         width: 48px;
         height: 48px;
-        background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+        background: linear-gradient(
+          135deg,
+          $color-primary 0%,
+          $color-primary-dark 100%
+        );
         border-radius: $radius-full;
         @extend %flex-center;
         position: relative;
@@ -419,7 +423,11 @@ $breakpoint-sm: 575px;
         // Depth 4
         @extend %button-base;
         width: 100%;
-        background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+        background: linear-gradient(
+          135deg,
+          $color-primary 0%,
+          $color-primary-dark 100%
+        );
         color: $color-text;
         margin-top: $spacing-md;
         padding: $spacing-md $spacing-lg;
@@ -487,7 +495,6 @@ $breakpoint-sm: 575px;
           font-size: 18px;
         }
       }
-      }
 
       .signInLink {
         // Depth 4
@@ -530,7 +537,11 @@ $breakpoint-sm: 575px;
       right: $spacing-lg;
       width: 40px;
       height: 40px;
-      background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+      background: linear-gradient(
+        135deg,
+        $color-primary 0%,
+        $color-primary-dark 100%
+      );
       border-radius: $radius-full;
       @extend %flex-center;
       z-index: 10;
@@ -555,4 +566,3 @@ $breakpoint-sm: 575px;
     }
   }
 }
-
