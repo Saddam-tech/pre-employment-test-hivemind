@@ -1,8 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createAccount } from "./page.actions";
 import styles from "./page.module.scss";
+import {
+  FaChevronDown,
+  FaGoogle,
+  FaFacebookF,
+  FaApple
+} from "react-icons/fa";
+import { MdAccountCircle } from "react-icons/md";
+import { BsTranslate, BsPencilSquare, BsFiles, BsClockHistory, BsLayoutSidebarReverse, BsLayoutSidebar } from "react-icons/bs";
+import { IoVideocamOutline } from "react-icons/io5";
+
+
+
 
 export default function PageClient() {
   const [formData, setFormData] = useState({
@@ -12,6 +24,9 @@ export default function PageClient() {
     phone: "",
     password: "",
   });
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -23,41 +38,73 @@ export default function PageClient() {
     await createAccount(formData);
   };
 
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 575);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const toggleSidebar = () => {
+    // On mobile, toggle open/close
+    // On desktop, toggle collapse/expand
+    if (isMobile) {
+      setIsSidebarOpen((prev) => !prev);
+    } else {
+      setIsSidebarCollapsed((prev) => !prev);
+    }
+  };
+
   return (
     <div className={styles.container}>
-      <aside className={styles.sidebar}>
+      {isSidebarOpen && (
+        <div
+          className={styles.sidebarOverlay}
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
+      {((isMobile && !isSidebarOpen) || (!isMobile && isSidebarCollapsed)) && (
+        <button className={styles.sidebarToggleFixed} onClick={toggleSidebar}>
+          <BsLayoutSidebar className={styles.toggleIcon} />
+        </button>
+      )}
+      <aside className={`${styles.sidebar} ${isSidebarCollapsed ? styles.sidebarCollapsed : ""} ${isSidebarOpen ? styles.sidebarOpen : ""}`}>
         <div className={styles.sidebarHeader}>
           <div className={styles.logo}></div>
-          <button className={styles.sidebarToggle}></button>
+          <button className={styles.sidebarToggle} onClick={toggleSidebar}>
+            <BsLayoutSidebarReverse />
+          </button>
         </div>
         <nav className={styles.nav}>
           <a href="#" className={styles.navItem}>
-            <span className={styles.navIcon}>✏️</span>
+            <BsPencilSquare className={styles.navIcon} />
             <span className={styles.navText}>New Chat</span>
           </a>
           <a href="#" className={styles.navItem}>
-            <span className={styles.navIcon}>Aa</span>
+            <BsTranslate className={styles.navIcon} />
             <span className={styles.navText}>Translate Text</span>
           </a>
           <a href="#" className={styles.navItem}>
-            <span className={styles.navIcon}>📹</span>
+            <IoVideocamOutline className={styles.navIcon} />
             <span className={styles.navText}>Translate Video</span>
           </a>
           <a href="#" className={styles.navItem}>
-            <span className={styles.navIcon}>📄</span>
+            <BsFiles className={styles.navIcon} />
             <span className={styles.navText}>Files</span>
           </a>
           <a href="#" className={styles.navItem}>
-            <span className={styles.navIcon}>🕐</span>
+            <BsClockHistory className={styles.navIcon} />
             <span className={styles.navText}>History</span>
           </a>
         </nav>
         <div className={styles.userProfile}>
-          <div className={styles.userIcon}>👤</div>
+          <MdAccountCircle className={styles.userIcon} />
           <span className={styles.userName}>Eldar Gezalov</span>
         </div>
       </aside>
-      <main className={styles.mainContent}>
+      <main className={`${styles.mainContent} ${isSidebarCollapsed ? styles.mainContentExpanded : ""}`}>
         <div className={styles.backgroundImage}></div>
         <div className={styles.modal}>
           <h1 className={styles.modalTitle}>Create Aurorah Account</h1>
@@ -91,15 +138,18 @@ export default function PageClient() {
               onChange={handleInputChange}
               required
             />
-            <input
-              type="tel"
-              name="phone"
-              placeholder="Phone number"
-              className={styles.input}
-              value={formData.phone}
-              onChange={handleInputChange}
-              required
-            />
+            <div className={styles.phoneInputWrapper}>
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Phone number"
+                className={styles.input}
+                value={formData.phone}
+                onChange={handleInputChange}
+                required
+              />
+              <FaChevronDown className={styles.phoneArrow} />
+            </div>
             <input
               type="password"
               name="password"
@@ -118,13 +168,13 @@ export default function PageClient() {
           </div>
           <div className={styles.socialButtons}>
             <button className={styles.socialButton}>
-              <span className={styles.socialIcon}>G</span>
+              <FaGoogle className={styles.socialIcon} />
             </button>
             <button className={styles.socialButton}>
-              <span className={styles.socialIcon}>f</span>
+              <FaFacebookF className={styles.socialIcon} />
             </button>
             <button className={styles.socialButton}>
-              <span className={styles.socialIcon}>🍎</span>
+              <FaApple className={styles.socialIcon} />
             </button>
           </div>
           <div className={styles.signInLink}>
@@ -134,7 +184,7 @@ export default function PageClient() {
             By creating an account, you agree to our user agreement and acknowledge our privacy notice.
           </p>
         </div>
-        <div className={styles.footerLogo}></div>
+        <MdAccountCircle className={styles.footerLogo} />
       </main>
     </div>
   );

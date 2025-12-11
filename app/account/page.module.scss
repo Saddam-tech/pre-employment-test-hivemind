@@ -3,9 +3,9 @@
 // ============================================
 $color-bg-dark: #1a1a1a;
 $color-sidebar: #2a2a2a;
-$color-modal-bg: rgba(42, 42, 42, 0.95);
+$color-modal-bg: rgba(42, 42, 42, 0.55);
 $color-primary: #00d4aa;
-$color-primary-dark: #00b894;
+$color-primary-dark: #00a085;
 $color-text: #ffffff;
 $color-text-muted: #a0a0a0;
 $color-input-bg: rgba(255, 255, 255, 0.1);
@@ -31,11 +31,13 @@ $radius-full: 50%;
 $sidebar-width: 280px;
 $sidebar-width-tablet: 240px;
 $sidebar-width-mobile: 200px;
+$sidebar-width-collapsed: 80px;
 
 // Breakpoints
 $breakpoint-lg: 991px;
 $breakpoint-md: 767px;
 $breakpoint-sm: 575px;
+$breakpoint-xs: 480px;
 
 // ============================================
 // Placeholder Selectors (for @extend)
@@ -62,6 +64,14 @@ $breakpoint-sm: 575px;
   font-size: 16px;
   outline: none;
   transition: border-color 0.2s, background-color 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+
+  @media (max-width: $breakpoint-sm) {
+    padding: $spacing-md;
+    font-size: 16px; // Prevent zoom on iOS
+    min-height: 44px; // Touch-friendly size
+  }
 
   &::placeholder {
     color: $color-text-muted;
@@ -160,6 +170,60 @@ $breakpoint-sm: 575px;
   background-color: $color-bg-dark;
   overflow: hidden;
 
+  .sidebarOverlay {
+    // Depth 2
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    backdrop-filter: blur(2px);
+
+    @media (max-width: $breakpoint-sm) {
+      display: block;
+    }
+  }
+
+  .sidebarToggleFixed {
+    // Depth 2
+    position: fixed;
+    left: $spacing-md;
+    top: $spacing-md;
+    width: 40px;
+    height: 40px;
+    background-color: $color-sidebar;
+    border: 1px solid $color-input-border;
+    border-radius: $radius-sm;
+    cursor: pointer;
+    @extend %flex-center;
+    padding: 0;
+    z-index: 101;
+    transition: background-color 0.2s, border-color 0.2s, opacity 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      border-color: $color-primary;
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: $breakpoint-sm) {
+      left: $spacing-sm;
+      top: $spacing-sm;
+      width: 36px;
+      height: 36px;
+    }
+
+    .toggleIcon {
+      font-size: 18px;
+      color: $color-text;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
   .sidebar {
     // Depth 2
     @extend .d-flex;
@@ -172,6 +236,8 @@ $breakpoint-sm: 575px;
     left: 0;
     top: 0;
     z-index: 100;
+    transition: transform 0.3s ease;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
 
     @media (max-width: $breakpoint-md) {
       width: $sidebar-width-tablet;
@@ -179,14 +245,30 @@ $breakpoint-sm: 575px;
     }
 
     @media (max-width: $breakpoint-sm) {
-      width: $sidebar-width-mobile;
-      padding: $spacing-sm;
+      width: 240px;
+      padding: $spacing-md;
+      transform: translateX(-100%);
+
+      &.sidebarOpen {
+        transform: translateX(0);
+      }
+    }
+
+    &.sidebarCollapsed {
+      transform: translateX(-100%);
+
+      @media (max-width: $breakpoint-sm) {
+        &.sidebarOpen {
+          transform: translateX(0);
+        }
+      }
     }
 
     .sidebarHeader {
       // Depth 3
       @extend %flex-between;
       margin-bottom: $spacing-xl;
+      gap: $spacing-md;
 
       .logo {
         // Depth 4
@@ -220,23 +302,36 @@ $breakpoint-sm: 575px;
 
       .sidebarToggle {
         // Depth 4
-        width: 32px;
-        height: 32px;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
         background-color: transparent;
         border: 1px solid $color-input-border;
         border-radius: $radius-sm;
         cursor: pointer;
         @extend %flex-center;
-
-        &::before {
-          content: "□";
-          color: $color-text-muted;
-          font-size: 16px;
-        }
+        padding: 0;
+        transition: background-color 0.2s, border-color 0.2s;
+        flex-shrink: 0;
 
         &:hover {
           border-color: $color-primary;
+          background-color: rgba(255, 255, 255, 0.1);
         }
+
+        @media (max-width: $breakpoint-sm) {
+          width: 36px;
+          height: 36px;
+          min-width: 36px;
+        }
+      }
+
+      .toggleIcon {
+        // Depth 4
+        font-size: 18px;
+        color: $color-text;
+        width: 18px;
+        height: 18px;
       }
     }
 
@@ -279,6 +374,11 @@ $breakpoint-sm: 575px;
           // Depth 4
           font-size: 16px;
           font-weight: 500;
+          white-space: nowrap;
+          opacity: 1;
+          transition: opacity 0.3s ease, width 0.3s ease, max-width 0.3s ease;
+          max-width: 200px;
+          overflow: hidden;
 
           @media (max-width: $breakpoint-sm) {
             font-size: 14px;
@@ -312,6 +412,11 @@ $breakpoint-sm: 575px;
         color: $color-text;
         font-size: 14px;
         font-weight: 500;
+        white-space: nowrap;
+        opacity: 1;
+        transition: opacity 0.3s ease, width 0.3s ease, max-width 0.3s ease;
+        max-width: 200px;
+        overflow: hidden;
 
         @media (max-width: $breakpoint-sm) {
           font-size: 12px;
@@ -328,241 +433,307 @@ $breakpoint-sm: 575px;
     margin-left: $sidebar-width;
     position: relative;
     overflow: hidden;
+    transition: margin-left 0.3s ease;
 
     @media (max-width: $breakpoint-md) {
       margin-left: $sidebar-width-tablet;
     }
 
     @media (max-width: $breakpoint-sm) {
-      margin-left: $sidebar-width-mobile;
+      margin-left: 0;
+      padding: $spacing-sm;
     }
 
-    .backgroundImage {
-      // Depth 3
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url("data:image/svg+xml,%3Csvg width='1920' height='1080' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f4a261;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23e76f51;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grad)'/%3E%3C/svg%3E");
-      background-size: cover;
-      background-position: center;
-      filter: blur(20px);
-      opacity: 0.3;
-      z-index: 0;
-    }
-
-    .modal {
-      // Depth 3
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      max-width: 500px;
-      background-color: $color-modal-bg;
-      border-radius: $radius-lg;
-      padding: $spacing-xxl;
-      margin: $spacing-xl;
-      backdrop-filter: blur(10px);
+    &.mainContentExpanded {
+      margin-left: 0;
 
       @media (max-width: $breakpoint-md) {
-        max-width: 450px;
-        padding: $spacing-xl;
-        margin: $spacing-lg;
+        margin-left: 0;
       }
 
       @media (max-width: $breakpoint-sm) {
-        max-width: 100%;
-        padding: $spacing-lg;
-        margin: $spacing-md;
-        border-radius: $radius-md;
+        margin-left: 0;
       }
+    }
+  }
 
-      .modalTitle {
-        // Depth 4
-        color: $color-text;
-        font-size: $font-size-title;
-        font-weight: 700;
-        margin: 0 0 $spacing-xl 0;
-        text-align: center;
+  .backgroundImage {
+    // Depth 3
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("/woman-typing.jpg");
+    background-size: cover;
+    background-position: center;
+    // filter: blur(10px);
+    opacity: 0.3;
+    z-index: 0;
+  }
 
-        @media (max-width: $breakpoint-md) {
-          font-size: $font-size-title-tablet;
-          margin-bottom: $spacing-lg;
-        }
+  .modal {
+    // Depth 3
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 500px;
+    background-color: $color-modal-bg;
+    border: 1px solid $color-input-border;
+    border-radius: $radius-lg;
+    padding: $spacing-xxl;
+    margin: $spacing-xl;
+    backdrop-filter: blur(10px);
 
-        @media (max-width: $breakpoint-sm) {
-          font-size: $font-size-title-mobile;
-          margin-bottom: $spacing-md;
-        }
-      }
+    @media (max-width: $breakpoint-md) {
+      max-width: 450px;
+      padding: $spacing-xl;
+      margin: $spacing-lg;
+    }
 
-      .form {
-        // Depth 4
-        @extend .d-flex;
-        @extend .flex-column;
-        gap: $spacing-md;
+    @media (max-width: $breakpoint-sm) {
+      max-width: 100%;
+      padding: $spacing-lg $spacing-md;
+      margin: 0;
+      border-radius: $radius-md;
+      width: 100%;
+    }
+
+    @media (max-width: $breakpoint-xs) {
+      padding: $spacing-md;
+    }
+
+    .modalTitle {
+      // Depth 4
+      color: $color-text;
+      font-size: $font-size-title;
+      font-weight: 700;
+      margin: 0 0 $spacing-xl 0;
+      text-align: center;
+
+      @media (max-width: $breakpoint-md) {
+        font-size: $font-size-title-tablet;
         margin-bottom: $spacing-lg;
       }
 
-      .nameFields {
-        // Depth 4
-        @extend .d-flex;
-        gap: $spacing-md;
-
-        @media (max-width: $breakpoint-sm) {
-          flex-direction: column;
-        }
-      }
-
-      .input {
-        // Depth 4
-        @extend %input-base;
-      }
-
-      .submitButton {
-        // Depth 4
-        @extend %button-base;
-        width: 100%;
-        background: linear-gradient(
-          135deg,
-          $color-primary 0%,
-          $color-primary-dark 100%
-        );
-        color: $color-text;
-        margin-top: $spacing-md;
-        padding: $spacing-md $spacing-lg;
-        font-size: 16px;
-        font-weight: 600;
-      }
-
-      .divider {
-        // Depth 4
-        @extend %flex-center;
-        margin: $spacing-lg 0;
-        position: relative;
-
-        &::before,
-        &::after {
-          content: "";
-          flex: 1;
-          height: 1px;
-          background-color: $color-input-border;
-        }
-
-        .dividerText {
-          // Depth 4
-          color: $color-text-muted;
-          font-size: 14px;
-          padding: 0 $spacing-md;
-        }
-      }
-
-      .socialButtons {
-        // Depth 4
-        @extend %flex-center;
-        gap: $spacing-md;
-        margin-bottom: $spacing-lg;
-
-        .socialButton {
-          // Depth 4
-          @extend %button-base;
-          width: 48px;
-          height: 48px;
-          background-color: $color-social-bg;
-          border: 1px solid $color-input-border;
-          border-radius: $radius-sm;
-          @extend %flex-center;
-          padding: 0;
-
-          @media (max-width: $breakpoint-sm) {
-            width: 44px;
-            height: 44px;
-          }
-
-          &:hover {
-            border-color: $color-primary;
-          }
-        }
-      }
-
-      .socialIcon {
-        // Depth 4 (direct child of .modal, used inside .socialButton)
-        color: $color-text;
-        font-size: 20px;
-        font-weight: 600;
-
-        @media (max-width: $breakpoint-sm) {
-          font-size: 18px;
-        }
-      }
-
-      .signInLink {
-        // Depth 4
-        text-align: center;
-        color: $color-text-muted;
-        font-size: 14px;
+      @media (max-width: $breakpoint-sm) {
+        font-size: $font-size-title-mobile;
         margin-bottom: $spacing-md;
-
-        .signInText {
-          // Depth 4
-          color: $color-text;
-          font-weight: 600;
-          text-decoration: none;
-
-          &:hover {
-            color: $color-primary;
-            text-decoration: underline;
-          }
-        }
-      }
-
-      .disclaimer {
-        // Depth 4
-        color: $color-text-muted;
-        font-size: 12px;
-        text-align: center;
-        line-height: 1.5;
-        margin: 0;
-
-        @media (max-width: $breakpoint-sm) {
-          font-size: 11px;
-        }
       }
     }
 
-    .footerLogo {
-      // Depth 3
+    .form {
+      // Depth 4
+      @extend .d-flex;
+      @extend .flex-column;
+      gap: $spacing-md;
+      margin-bottom: $spacing-lg;
+
+      @media (max-width: $breakpoint-sm) {
+        gap: $spacing-sm;
+        margin-bottom: $spacing-md;
+      }
+    }
+
+    .nameFields {
+      // Depth 4
+      @extend .d-flex;
+      gap: $spacing-md;
+
+      @media (max-width: $breakpoint-sm) {
+        flex-direction: column;
+        gap: $spacing-sm;
+      }
+    }
+
+    .input {
+      // Depth 4
+      @extend %input-base;
+    }
+
+    .phoneInputWrapper {
+      // Depth 4
+      position: relative;
+      width: 100%;
+
+      .input {
+        padding-right: 40px;
+      }
+    }
+
+    .phoneArrow {
+      // Depth 4
       position: absolute;
-      bottom: $spacing-lg;
-      right: $spacing-lg;
-      width: 40px;
-      height: 40px;
+      right: $spacing-md;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $color-text-muted;
+      font-size: 12px;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .submitButton {
+      // Depth 4
+      @extend %button-base;
+      width: 100%;
       background: linear-gradient(
         135deg,
         $color-primary 0%,
         $color-primary-dark 100%
       );
-      border-radius: $radius-full;
-      @extend %flex-center;
-      z-index: 10;
-
-      &::before {
-        content: "e";
-        color: $color-text;
-        font-size: 20px;
-        font-weight: bold;
-      }
+      color: $color-text;
+      margin-top: $spacing-md;
+      padding: $spacing-md $spacing-lg;
+      font-size: 16px;
+      font-weight: 600;
+      min-height: 48px; // Touch-friendly
 
       @media (max-width: $breakpoint-sm) {
-        width: 32px;
-        height: 32px;
-        bottom: $spacing-md;
-        right: $spacing-md;
+        padding: $spacing-md;
+        min-height: 50px;
+        font-size: 16px;
+      }
+    }
 
-        &::before {
-          font-size: 16px;
+    .divider {
+      // Depth 4
+      @extend %flex-center;
+      margin: $spacing-lg 0;
+      position: relative;
+
+      @media (max-width: $breakpoint-sm) {
+        margin: $spacing-md 0;
+      }
+
+      &::before,
+      &::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background-color: $color-input-border;
+      }
+
+      .dividerText {
+        // Depth 4
+        color: $color-text-muted;
+        font-size: 14px;
+        padding: 0 $spacing-md;
+
+        @media (max-width: $breakpoint-sm) {
+          font-size: 12px;
+          padding: 0 $spacing-sm;
         }
       }
+    }
+
+    .socialButtons {
+      // Depth 4
+      @extend %flex-center;
+      gap: $spacing-sm;
+      margin-bottom: $spacing-lg;
+
+      @media (max-width: $breakpoint-sm) {
+        gap: $spacing-xs;
+        margin-bottom: $spacing-md;
+      }
+
+      .socialButton {
+        // Depth 4
+        @extend %button-base;
+        width: 100%;
+        height: 58px;
+        background-color: $color-social-bg;
+        border: 1px solid $color-input-border;
+        border-radius: $radius-sm;
+        @extend %flex-center;
+        padding: 0;
+        min-height: 48px; // Touch-friendly
+
+        @media (max-width: $breakpoint-sm) {
+          height: 50px;
+          min-height: 50px;
+        }
+
+        &:hover {
+          border-color: $color-primary;
+        }
+
+        &:active {
+          transform: scale(0.98);
+        }
+      }
+    }
+
+    .socialIcon {
+      // Depth 4 (direct child of .modal, used inside .socialButton)
+      color: $color-text;
+      font-size: 30px;
+      font-weight: 600;
+
+      @media (max-width: $breakpoint-sm) {
+        font-size: 18px;
+      }
+    }
+
+    .appleIcon {
+      // Depth 4
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .signInLink {
+      // Depth 4
+      text-align: center;
+      color: $color-text-muted;
+      font-size: 14px;
+      margin-bottom: $spacing-md;
+
+      .signInText {
+        // Depth 4
+        color: $color-text;
+        font-weight: 600;
+        text-decoration: none;
+
+        &:hover {
+          color: $color-primary;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .disclaimer {
+      // Depth 4
+      color: $color-text-muted;
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.5;
+      margin: 0;
+
+      @media (max-width: $breakpoint-sm) {
+        font-size: 11px;
+        line-height: 1.4;
+      }
+    }
+  }
+
+  .footerLogo {
+    // Depth 3
+    position: absolute;
+    bottom: $spacing-lg;
+    right: $spacing-lg;
+    width: 40px;
+    height: 40px;
+    color: $color-primary;
+    z-index: 10;
+    font-size: 40px;
+
+    @media (max-width: $breakpoint-sm) {
+      width: 32px;
+      height: 32px;
+      bottom: $spacing-sm;
+      right: $spacing-sm;
+      font-size: 32px;
     }
   }
 }
