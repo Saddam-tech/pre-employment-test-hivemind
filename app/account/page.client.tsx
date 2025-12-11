@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { createAccount } from "./page.actions";
 import styles from "./page.module.scss";
 import {
@@ -72,7 +73,16 @@ export default function PageClient() {
       )}
       <aside className={`${styles.sidebar} ${isSidebarCollapsed ? styles.sidebarCollapsed : ""} ${isSidebarOpen ? styles.sidebarOpen : ""}`}>
         <div className={styles.sidebarHeader}>
-          <div className={styles.logo}></div>
+          <div className={styles.logo}>
+            <Image
+              src="/aurorah-logo.jpeg"
+              alt="Aurorah Logo"
+              width={48}
+              height={48}
+              className={styles.logoImage}
+              unoptimized
+            />
+          </div>
           <button className={styles.sidebarToggle} onClick={toggleSidebar}>
             <BsLayoutSidebarReverse />
           </button>
@@ -184,7 +194,16 @@ export default function PageClient() {
             By creating an account, you agree to our user agreement and acknowledge our privacy notice.
           </p>
         </div>
-        <MdAccountCircle className={styles.footerLogo} />
+        <div className={styles.footerLogo}>
+          <Image
+            src="/aurorah-logo.jpeg"
+            alt="Aurorah Logo"
+            width={40}
+            height={40}
+            className={styles.footerLogoImage}
+            unoptimized
+          />
+        </div>
       </main>
     </div>
   );
