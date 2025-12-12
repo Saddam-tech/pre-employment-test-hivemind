@@ -187,43 +187,6 @@ $breakpoint-xs: 480px;
     }
   }
 
-  .sidebarToggleFixed {
-    // Depth 2
-    position: fixed;
-    left: $spacing-md;
-    top: $spacing-md;
-    width: 40px;
-    height: 40px;
-    background-color: $color-sidebar;
-    border: 1px solid $color-input-border;
-    border-radius: $radius-sm;
-    cursor: pointer;
-    @extend %flex-center;
-    padding: 0;
-    z-index: 101;
-    transition: background-color 0.2s, border-color 0.2s, opacity 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-
-    &:hover {
-      border-color: $color-primary;
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-
-    @media (max-width: $breakpoint-sm) {
-      left: $spacing-sm;
-      top: $spacing-sm;
-      width: 36px;
-      height: 36px;
-    }
-
-    .toggleIcon {
-      font-size: 18px;
-      color: $color-text;
-      width: 18px;
-      height: 18px;
-    }
-  }
-
   .sidebar {
     // Depth 2
     @extend .d-flex;
@@ -236,7 +199,7 @@ $breakpoint-xs: 480px;
     left: 0;
     top: 0;
     z-index: 100;
-    transition: transform 0.3s ease;
+    transition: width 0.3s ease, padding 0.3s ease, transform 0.3s ease;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
 
     @media (max-width: $breakpoint-md) {
@@ -255,9 +218,19 @@ $breakpoint-xs: 480px;
     }
 
     &.sidebarCollapsed {
-      transform: translateX(-100%);
+      width: $sidebar-width-collapsed;
+      padding: $spacing-md $spacing-sm;
+
+      @media (max-width: $breakpoint-md) {
+        width: $sidebar-width-collapsed;
+        padding: $spacing-md $spacing-sm;
+      }
 
       @media (max-width: $breakpoint-sm) {
+        width: 240px;
+        transform: translateX(-100%);
+        padding: $spacing-md;
+
         &.sidebarOpen {
           transform: translateX(0);
         }
@@ -272,8 +245,8 @@ $breakpoint-xs: 480px;
 
       .logo {
         // Depth 4
-        width: 48px;
-        height: 48px;
+        width: 45px;
+        height: 45px;
         border-radius: $radius-full;
         @extend %flex-center;
         position: relative;
@@ -303,7 +276,7 @@ $breakpoint-xs: 480px;
         cursor: pointer;
         @extend %flex-center;
         padding: 0;
-        transition: background-color 0.2s, border-color 0.2s;
+        transition: background-color 0.2s, border-color 0.2s, opacity 0.3s ease;
         flex-shrink: 0;
 
         &:hover {
@@ -315,6 +288,15 @@ $breakpoint-xs: 480px;
           width: 36px;
           height: 36px;
           min-width: 36px;
+        }
+      }
+
+      .sidebarCollapsed & {
+        .sidebarToggle {
+          opacity: 0;
+          width: 0;
+          min-width: 0;
+          overflow: hidden;
         }
       }
 
@@ -353,12 +335,15 @@ $breakpoint-xs: 480px;
         .navIcon {
           // Depth 4
           font-size: 20px;
-          width: 24px;
+          width: 20px;
+          height: 20px;
           text-align: center;
+          flex-shrink: 0;
 
           @media (max-width: $breakpoint-sm) {
             font-size: 18px;
-            width: 20px;
+            width: 18px;
+            height: 18px;
           }
         }
 
@@ -374,6 +359,26 @@ $breakpoint-xs: 480px;
 
           @media (max-width: $breakpoint-sm) {
             font-size: 14px;
+          }
+        }
+      }
+
+      .sidebarCollapsed & {
+        .navItem {
+          justify-content: center;
+          padding: $spacing-md;
+
+          .navIcon {
+            width: 20px;
+            height: 20px;
+            font-size: 20px;
+          }
+
+          .navText {
+            opacity: 0;
+            max-width: 0;
+            width: 0;
+            overflow: hidden;
           }
         }
       }
@@ -393,10 +398,12 @@ $breakpoint-xs: 480px;
         // Depth 4
         width: 32px;
         height: 32px;
+        min-width: 32px;
         @extend %flex-center;
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: $radius-full;
         font-size: 18px;
+        flex-shrink: 0;
       }
 
       .userName {
@@ -412,6 +419,20 @@ $breakpoint-xs: 480px;
 
         @media (max-width: $breakpoint-sm) {
           font-size: 12px;
+        }
+      }
+    }
+
+    .sidebarCollapsed & {
+      .userProfile {
+        justify-content: center;
+        padding: $spacing-md;
+
+        .userName {
+          opacity: 0;
+          max-width: 0;
+          width: 0;
+          overflow: hidden;
         }
       }
     }
@@ -437,10 +458,10 @@ $breakpoint-xs: 480px;
     }
 
     &.mainContentExpanded {
-      margin-left: 0;
+      margin-left: $sidebar-width-collapsed;
 
       @media (max-width: $breakpoint-md) {
-        margin-left: 0;
+        margin-left: $sidebar-width-collapsed;
       }
 
       @media (max-width: $breakpoint-sm) {

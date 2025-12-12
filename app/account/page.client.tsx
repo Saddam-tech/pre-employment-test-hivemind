@@ -11,7 +11,7 @@ import {
   FaApple
 } from "react-icons/fa";
 import { MdAccountCircle } from "react-icons/md";
-import { BsTranslate, BsPencilSquare, BsFiles, BsClockHistory, BsLayoutSidebarReverse, BsLayoutSidebar } from "react-icons/bs";
+import { BsTranslate, BsPencilSquare, BsFiles, BsClockHistory, BsLayoutSidebarReverse } from "react-icons/bs";
 import { IoVideocamOutline } from "react-icons/io5";
 
 
@@ -66,14 +66,13 @@ export default function PageClient() {
           onClick={() => setIsSidebarOpen(false)}
         ></div>
       )}
-      {((isMobile && !isSidebarOpen) || (!isMobile && isSidebarCollapsed)) && (
-        <button className={styles.sidebarToggleFixed} onClick={toggleSidebar}>
-          <BsLayoutSidebar className={styles.toggleIcon} />
-        </button>
-      )}
-      <aside className={`${styles.sidebar} ${isSidebarCollapsed ? styles.sidebarCollapsed : ""} ${isSidebarOpen ? styles.sidebarOpen : ""}`}>
+      <aside
+        className={`${styles.sidebar} ${isSidebarCollapsed ? styles.sidebarCollapsed : ""} ${isSidebarOpen ? styles.sidebarOpen : ""}`}
+        onClick={isSidebarCollapsed && !isMobile ? toggleSidebar : undefined}
+        style={isSidebarCollapsed && !isMobile ? { cursor: 'pointer' } : undefined}
+      >
         <div className={styles.sidebarHeader}>
-          <div className={styles.logo}>
+          <div className={styles.logo} onClick={toggleSidebar} style={{ cursor: 'pointer' }}>
             <Image
               src="/aurorah-logo.jpeg"
               alt="Aurorah Logo"
@@ -83,9 +82,17 @@ export default function PageClient() {
               unoptimized
             />
           </div>
-          <button className={styles.sidebarToggle} onClick={toggleSidebar}>
-            <BsLayoutSidebarReverse />
-          </button>
+          {!isSidebarCollapsed && (
+            <button
+              className={styles.sidebarToggle}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleSidebar();
+              }}
+            >
+              <BsLayoutSidebarReverse />
+            </button>
+          )}
         </div>
         <nav className={styles.nav}>
           <a href="#" className={styles.navItem}>
