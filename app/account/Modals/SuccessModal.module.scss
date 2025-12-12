@@ -1,0 +1,209 @@
+// ============================================
+// Variables
+// ============================================
+$color-sidebar: #2a2a2a;
+$color-input-border: rgba(255, 255, 255, 0.2);
+$color-primary: #00d4aa;
+$color-primary-dark: #00a085;
+$color-success: #00d4aa;
+$color-text: #ffffff;
+$color-text-muted: #a0a0a0;
+
+$font-size-title: 28px;
+$font-size-title-mobile: 20px;
+
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-full: 50%;
+
+$breakpoint-sm: 575px;
+
+// ============================================
+// Placeholder Selectors (for @extend)
+// ============================================
+%flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+%button-base {
+  border: none;
+  border-radius: $radius-sm;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: $spacing-md $spacing-lg;
+
+  @media (max-width: $breakpoint-sm) {
+    font-size: 12px;
+    padding: $spacing-sm $spacing-md;
+  }
+}
+
+// ============================================
+// Utility Classes
+// ============================================
+.d-flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+// ============================================
+// Component Styles
+// ============================================
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.successModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: $color-sidebar;
+  border: 1px solid $color-input-border;
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  max-width: 500px;
+  width: 90%;
+  z-index: 1001;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  @extend .d-flex;
+  @extend .flex-column;
+  align-items: center;
+  text-align: center;
+
+  @media (max-width: $breakpoint-sm) {
+    padding: $spacing-lg;
+    max-width: 95%;
+    border-radius: $radius-md;
+  }
+
+  .closeButton {
+    position: absolute;
+    top: $spacing-md;
+    right: $spacing-md;
+    width: 32px;
+    height: 32px;
+    background-color: transparent;
+    border: 1px solid $color-input-border;
+    border-radius: $radius-sm;
+    color: $color-text-muted;
+    cursor: pointer;
+    @extend %flex-center;
+    padding: 0;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: $color-primary;
+      color: $color-text;
+    }
+
+    @media (max-width: $breakpoint-sm) {
+      width: 28px;
+      height: 28px;
+      top: $spacing-sm;
+      right: $spacing-sm;
+    }
+  }
+
+  .successIcon {
+    width: 80px;
+    height: 80px;
+    @extend %flex-center;
+    color: $color-success;
+    font-size: 80px;
+    margin-bottom: $spacing-lg;
+    animation: scaleIn 0.3s ease-out;
+
+    @media (max-width: $breakpoint-sm) {
+      width: 60px;
+      height: 60px;
+      font-size: 60px;
+      margin-bottom: $spacing-md;
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .successTitle {
+    color: $color-text;
+    font-size: $font-size-title;
+    font-weight: 700;
+    margin: 0 0 $spacing-md 0;
+    text-align: center;
+
+    @media (max-width: $breakpoint-sm) {
+      font-size: $font-size-title-mobile;
+      margin-bottom: $spacing-sm;
+    }
+  }
+
+  .successMessage {
+    color: $color-text-muted;
+    font-size: 16px;
+    text-align: center;
+    margin: 0 0 $spacing-xl 0;
+    line-height: 1.5;
+
+    @media (max-width: $breakpoint-sm) {
+      font-size: 14px;
+      margin-bottom: $spacing-lg;
+    }
+  }
+
+  .closeSuccessButton {
+    @extend %button-base;
+    background: linear-gradient(
+      135deg,
+      $color-primary 0%,
+      $color-primary-dark 100%
+    );
+    color: $color-text;
+    padding: $spacing-md $spacing-xl;
+    min-width: 150px;
+
+    &:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: $breakpoint-sm) {
+      width: 100%;
+      min-width: auto;
+    }
+  }
+}
+

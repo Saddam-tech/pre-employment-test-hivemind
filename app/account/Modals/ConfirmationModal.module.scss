@@ -1,0 +1,255 @@
+// ============================================
+// Variables
+// ============================================
+$color-sidebar: #2a2a2a;
+$color-input-border: rgba(255, 255, 255, 0.2);
+$color-primary: #00d4aa;
+$color-primary-dark: #00a085;
+$color-text: #ffffff;
+$color-text-muted: #a0a0a0;
+
+$font-size-title: 28px;
+$font-size-title-mobile: 20px;
+
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+
+$breakpoint-sm: 575px;
+
+// ============================================
+// Placeholder Selectors (for @extend)
+// ============================================
+%flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+%button-base {
+  border: none;
+  border-radius: $radius-sm;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: $spacing-md $spacing-lg;
+
+  @media (max-width: $breakpoint-sm) {
+    font-size: 12px;
+    padding: $spacing-sm $spacing-md;
+  }
+}
+
+// ============================================
+// Utility Classes
+// ============================================
+.d-flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+// ============================================
+// Component Styles
+// ============================================
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirmationModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: $color-sidebar;
+  border: 1px solid $color-input-border;
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  max-width: 500px;
+  width: 90%;
+  z-index: 1001;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+
+  @media (max-width: $breakpoint-sm) {
+    padding: $spacing-lg;
+    max-width: 95%;
+    border-radius: $radius-md;
+  }
+
+  .closeButton {
+    position: absolute;
+    top: $spacing-md;
+    right: $spacing-md;
+    width: 32px;
+    height: 32px;
+    background-color: transparent;
+    border: 1px solid $color-input-border;
+    border-radius: $radius-sm;
+    color: $color-text-muted;
+    cursor: pointer;
+    @extend %flex-center;
+    padding: 0;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: $color-primary;
+      color: $color-text;
+    }
+
+    @media (max-width: $breakpoint-sm) {
+      width: 28px;
+      height: 28px;
+      top: $spacing-sm;
+      right: $spacing-sm;
+    }
+  }
+
+  .confirmationTitle {
+    color: $color-text;
+    font-size: $font-size-title;
+    font-weight: 700;
+    margin: 0 0 $spacing-sm 0;
+    text-align: center;
+
+    @media (max-width: $breakpoint-sm) {
+      font-size: $font-size-title-mobile;
+      margin-bottom: $spacing-xs;
+    }
+  }
+
+  .confirmationSubtitle {
+    color: $color-text-muted;
+    font-size: 14px;
+    text-align: center;
+    margin: 0 0 $spacing-lg 0;
+
+    @media (max-width: $breakpoint-sm) {
+      font-size: 12px;
+      margin-bottom: $spacing-md;
+    }
+  }
+
+  .confirmationContent {
+    @extend .d-flex;
+    @extend .flex-column;
+    gap: $spacing-md;
+    margin-bottom: $spacing-xl;
+    padding: $spacing-lg;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: $radius-md;
+
+    @media (max-width: $breakpoint-sm) {
+      gap: $spacing-sm;
+      padding: $spacing-md;
+      margin-bottom: $spacing-lg;
+    }
+  }
+
+  .confirmationField {
+    @extend .d-flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: $spacing-md;
+
+    @media (max-width: $breakpoint-sm) {
+      flex-direction: column;
+      gap: $spacing-xs;
+    }
+  }
+
+  .confirmationLabel {
+    color: $color-text-muted;
+    font-size: 14px;
+    font-weight: 500;
+    flex-shrink: 0;
+
+    @media (max-width: $breakpoint-sm) {
+      font-size: 12px;
+    }
+  }
+
+  .confirmationValue {
+    color: $color-text;
+    font-size: 14px;
+    text-align: right;
+    word-break: break-word;
+
+    @media (max-width: $breakpoint-sm) {
+      font-size: 12px;
+      text-align: left;
+    }
+  }
+
+  .confirmationActions {
+    @extend .d-flex;
+    gap: $spacing-md;
+    justify-content: space-between;
+
+    @media (max-width: $breakpoint-sm) {
+      flex-direction: column;
+      gap: $spacing-sm;
+    }
+  }
+
+  .cancelButton {
+    @extend %button-base;
+    background-color: transparent;
+    border: 1px solid $color-input-border;
+    color: $color-text-muted;
+    padding: $spacing-md $spacing-lg;
+    min-width: 120px;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: $color-text-muted;
+      color: $color-text;
+    }
+
+    @media (max-width: $breakpoint-sm) {
+      width: 100%;
+      min-width: auto;
+    }
+  }
+
+  .confirmButton {
+    @extend %button-base;
+    background: linear-gradient(
+      135deg,
+      $color-primary 0%,
+      $color-primary-dark 100%
+    );
+    color: $color-text;
+    padding: $spacing-md $spacing-lg;
+    min-width: 120px;
+
+    &:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: $breakpoint-sm) {
+      width: 100%;
+      min-width: auto;
+    }
+  }
+}

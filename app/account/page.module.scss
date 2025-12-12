@@ -11,6 +11,8 @@ $color-text-muted: #a0a0a0;
 $color-input-bg: rgba(255, 255, 255, 0.1);
 $color-input-border: rgba(255, 255, 255, 0.2);
 $color-social-bg: #000000;
+$color-error: #ff4444;
+$color-error-bg: rgba(255, 68, 68, 0.1);
 
 $font-size-title: 28px;
 $font-size-title-tablet: 24px;
@@ -184,6 +186,41 @@ $breakpoint-xs: 480px;
 
     @media (max-width: $breakpoint-sm) {
       display: block;
+    }
+  }
+
+  .mobileSidebarToggle {
+    // Depth 2
+    position: fixed;
+    left: $spacing-md;
+    top: $spacing-md;
+    width: 40px;
+    height: 40px;
+    background-color: $color-sidebar;
+    border: 1px solid $color-input-border;
+    border-radius: $radius-sm;
+    cursor: pointer;
+    @extend %flex-center;
+    padding: 0;
+    z-index: 101;
+    transition: background-color 0.2s, border-color 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    display: none;
+
+    @media (max-width: $breakpoint-sm) {
+      display: flex;
+    }
+
+    &:hover {
+      border-color: $color-primary;
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .toggleIcon {
+      font-size: 18px;
+      color: $color-text;
+      width: 18px;
+      height: 18px;
     }
   }
 
@@ -393,6 +430,17 @@ $breakpoint-xs: 480px;
       background-color: rgba(255, 255, 255, 0.05);
       border-radius: $radius-md;
       margin-top: auto;
+      transition: padding 0.3s ease, justify-content 0.3s ease;
+      align-self: flex-start;
+      width: 100%;
+
+      &.userProfileCollapsed {
+        justify-content: flex-start;
+        padding: $spacing-xs;
+        gap: 0;
+        width: auto;
+        align-self: flex-start;
+      }
 
       .userIcon {
         // Depth 4
@@ -559,18 +607,54 @@ $breakpoint-xs: 480px;
       }
     }
 
+    .inputWrapper {
+      // Depth 4
+      @extend .d-flex;
+      @extend .flex-column;
+      gap: $spacing-xs;
+      width: 100%;
+    }
+
     .input {
       // Depth 4
       @extend %input-base;
+    }
+
+    .inputError {
+      border-color: $color-error !important;
+
+      &:focus {
+        border-color: $color-error !important;
+        outline-color: $color-error;
+      }
+    }
+
+    .errorMessage {
+      // Depth 4
+      color: $color-error;
+      font-size: 12px;
+      margin-top: $spacing-xs;
+      padding-left: $spacing-sm;
+
+      @media (max-width: $breakpoint-sm) {
+        font-size: 11px;
+      }
     }
 
     .phoneInputWrapper {
       // Depth 4
       position: relative;
       width: 100%;
+      @extend .d-flex;
+      @extend .flex-column;
+      gap: $spacing-xs;
 
       .input {
         padding-right: 40px;
+      }
+
+      .errorMessage {
+        padding-left: $spacing-sm;
       }
     }
 
